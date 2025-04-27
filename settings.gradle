@@ -20,3 +20,5 @@ include 'DynmapRegions'
 include 'BluemapRegions'
 include 'CustomizerCommand'
 
+
+include 'PlayerPoints'
