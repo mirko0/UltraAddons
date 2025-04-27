@@ -72,8 +72,10 @@ public class RunUltraCustomizerCommand extends Element {
 
     public void run(ElementInfo elementInfo, ScriptInstance instance) {
         Player player = (Player) getArguments(elementInfo)[0].getValue(instance);
-        String cmdName = (String) getArguments(elementInfo)[1].getValue(instance);
-        if (cmdName.startsWith("/")) cmdName = cmdName.replace("/", "");
+        String fullCommand = (String) getArguments(elementInfo)[1].getValue(instance);
+        String[] split = fullCommand.split(" ");
+        String cmdName = split[0];
+        if (fullCommand.startsWith("/")) fullCommand = fullCommand.replace("/", "");
         List<String> commands = new ArrayList<>();
         for (Folder folder : UltraCustomizer.getInstance().getFolders()) {
             for (Script script : folder.getScripts()) {
@@ -88,7 +90,7 @@ public class RunUltraCustomizerCommand extends Element {
         }
         boolean isUcCommand = commands.contains(cmdName) || commands.contains("/" + cmdName) || commands.contains("//" + cmdName);
         if (isUcCommand) {
-            Bukkit.getPluginManager().callEvent(new PlayerCommandPreprocessEvent(player, "/" + cmdName));
+            Bukkit.getPluginManager().callEvent(new PlayerCommandPreprocessEvent(player, "/" + fullCommand));
             this.getConnectors(elementInfo)[0].run(instance);
         }
     }
