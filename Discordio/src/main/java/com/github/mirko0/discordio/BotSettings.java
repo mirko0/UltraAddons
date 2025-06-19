@@ -12,5 +12,8 @@ import net.dv8tion.jda.api.entities.Activity;
 public class BotSettings {
     private String token;
     private OnlineStatus onlineStatus;
-    private Activity activity;
+    private String activityText;
+    private String activityUrl;
+    private String activityType;
+    private boolean pAPI;
 }

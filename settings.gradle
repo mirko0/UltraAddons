@@ -22,3 +22,4 @@ include 'CustomizerCommand'
 
 
 include 'PlayerPoints'
+include 'CoinsEngine'

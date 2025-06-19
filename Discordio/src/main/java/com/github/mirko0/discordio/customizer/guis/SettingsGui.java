@@ -1,6 +1,8 @@
 package com.github.mirko0.discordio.customizer.guis;
 
 import com.github.mirko0.discordio.AddonMain;
+import com.github.mirko0.discordio.BotSettings;
+import com.github.mirko0.discordio.dbot.BotMain;
 import me.TechsCode.UltraCustomizer.ColorPalette;
 import me.TechsCode.UltraCustomizer.UltraCustomizer;
 import me.TechsCode.UltraCustomizer.base.addons.gui.AddonsMarketplaceListView;
@@ -16,9 +18,11 @@ import me.TechsCode.UltraCustomizer.base.translations.Phrase;
 import me.TechsCode.UltraCustomizer.base.visual.Animation;
 import me.TechsCode.UltraCustomizer.base.visual.Color;
 import me.TechsCode.UltraCustomizer.base.visual.Colors;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
@@ -78,13 +82,20 @@ public abstract class SettingsGui extends GUI {
     }
 
     private void handleActivityButton(String key, String result) {
-        AddonMain.instance.getConfigFile().set(key, result);
-        Activity activity = AddonMain.instance.getActivityFromConfig();
-        AddonMain.instance.getSettings().setActivity(activity);
+        YamlConfiguration configFile = AddonMain.instance.getConfigFile();
+        configFile.set(key, result);
+        String activityText = configFile.get("activityText", "Hi!").toString();
+        String activityUrl = configFile.get("activityUrl", "NOT_SET").toString();
+        String activityType = configFile.get("activityType", "CUSTOM_STATUS").toString();
+        BotSettings settings = AddonMain.instance.getSettings();
+        settings.setActivityText(activityText);
+        settings.setActivityType(activityType);
+        settings.setActivityUrl(activityUrl);
         JDA jda = AddonMain.instance.getDiscordBot().getJda();
-        if (jda != null) jda.getPresence().setActivity(activity);
+        if (settings.isPAPI() && activityText.contains("%")) activityText = PlaceholderAPI.setPlaceholders(null, activityText);
+        if (jda != null) jda.getPresence().setActivity(BotMain.constructActivity(activityText, activityUrl, activityType));
         try {
-            AddonMain.instance.getConfigFile().save(AddonMain.instance.getConfigFileO());
+            configFile.save(AddonMain.instance.getConfigFileO());
         } catch (IOException e) {
             AddonMain.log("Error happened while saving config file during activity button");
         }

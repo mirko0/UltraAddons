@@ -9,12 +9,14 @@ import me.TechsCode.UltraCustomizer.base.gui.Button;
 import me.TechsCode.UltraCustomizer.base.gui.Entry;
 import me.TechsCode.UltraCustomizer.base.item.XMaterial;
 import me.TechsCode.UltraCustomizer.gui.Overview;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,9 +55,11 @@ public class AddonMain implements Listener {
     private YamlConfiguration configFile;
     private final File configFileO = new File("plugins/UltraCustomizer/discordio.yml");
     private final ReferenceManager referenceManager = new ReferenceManager();
-
+    private boolean placeholderAPIEnabled = false;
 
     private void onLoad() {
+        Plugin placeholderAPI = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
+        placeholderAPIEnabled = placeholderAPI != null;
         setupSettingsFile();
         Bukkit.getScheduler().runTaskAsynchronously(UltraCustomizer.getInstance().getBootstrap(), () -> {
             this.discordBot = new BotMain(settings);
@@ -80,18 +84,14 @@ public class AddonMain implements Listener {
             String onlineStatus = config.get("onlineStatus", "ONLINE").toString();
             config.save(configFileO);
             this.configFile = config;
-            settings = new BotSettings(token, OnlineStatus.valueOf(onlineStatus), getActivityFromConfig());
+            String activityText = configFile.get("activityText", "Hi!").toString();
+            String activityUrl = configFile.get("activityUrl", "NOT_SET").toString();
+            String activityType = configFile.get("activityType", "CUSTOM_STATUS").toString();
+            settings = new BotSettings(token, OnlineStatus.valueOf(onlineStatus), activityText, activityUrl, activityType, placeholderAPIEnabled);
         } catch (IOException e) {
             UltraCustomizer.getInstance().log("Error while loading settings file");
             e.printStackTrace();
         }
-    }
-
-    public Activity getActivityFromConfig() {
-        String activityText = configFile.get("activityText", "Hi!").toString();
-        String activityType = configFile.get("activityType", "CUSTOM_STATUS").toString();
-        String activityUrl = configFile.get("activityUrl", "NOT_SET").toString();
-        return Activity.of(Activity.ActivityType.valueOf(activityType), activityText, activityUrl.equals("NOT_SET") ? null : activityUrl);
     }
 
     private void addButtonToOverview() throws NoSuchFieldException, IllegalAccessException {
