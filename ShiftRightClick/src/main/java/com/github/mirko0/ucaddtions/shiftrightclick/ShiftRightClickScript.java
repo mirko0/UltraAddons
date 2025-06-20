@@ -64,7 +64,6 @@ public class ShiftRightClickScript extends Constructor {
             return;
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             final ItemStack item = logic.getItemInMainHand(p);
-            final XMaterial material = XMaterial.fromMaterial(item.getType());
             call(elementInfo -> {
                 ScriptInstance instance = new ScriptInstance();
                 getOutcomingVariables(elementInfo)[0].register(instance, new DataRequester() {
@@ -79,7 +78,7 @@ public class ShiftRightClickScript extends Constructor {
                 });
                 getOutcomingVariables(elementInfo)[2].register(instance, new DataRequester() {
                     public Object request() {
-                        return material;
+                        return XMaterial.fromItem(item);
                     }
                 });
                 return instance;

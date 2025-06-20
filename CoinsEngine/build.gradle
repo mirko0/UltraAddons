@@ -7,11 +7,18 @@ version = '1.0-dev'
 
 repositories {
     mavenCentral()
+    maven {
+        name = "nightexpress-releases"
+        url = uri("https://repo.nightexpressdev.com/releases")
+    }
+    maven {
+        name = "jitpack.io"
+        url = uri("https://jitpack.io")
+    }
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'su.nightexpress.coinsengine:CoinsEngine:2.4.2'
 }
 
 test {
