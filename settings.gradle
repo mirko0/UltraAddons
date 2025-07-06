@@ -23,3 +23,4 @@ include 'CustomizerCommand'
 
 include 'PlayerPoints'
 include 'CoinsEngine'
+include 'NumberConverter'
