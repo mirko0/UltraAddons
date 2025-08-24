@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly files("libs\\UltraCustomizer.jar")
+    compileOnly files("libs\\UltraCustomizer-2.6.2.jar")
     compileOnly files("libs\\original.jar")
     compileOnly files("libs\\patched.jar")
     compileOnly 'org.projectlombok:lombok:1.18.36'
@@ -40,7 +40,7 @@ subprojects {
         maven { url 'https://repo.bluecolored.de/releases' }
     }
     dependencies {
-        compileOnly files(project(":").file("libs\\UltraCustomizer.jar"))
+        compileOnly files(project(":").file("libs\\UltraCustomizer-2.6.2.jar"))
 //        compileOnly files(project(":").file("libs\\original.jar"))
 //        compileOnly files(project(":").file("libs\\patched.jar"))
         compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
